@@ -1,0 +1,127 @@
+
+#Este é um exemplo de como pegar uma imagem do docker-compose para um projeto.
+#É necessário que o arquivo yaml se chame docker-compose.yaml conforme exemplo.
+#Primeiro configuro a versão conforme a tag 'version' abaixo.
+#Segundo declaro a tag services, pois eu desejo configurar um servico
+#Em seguida dou um nome para ele (esse nome pode ser aleatório), que neste
+#caso é php-server e em seguida eu digo qual imagem eu quero usar. Neste caso
+#estou usando o php:7.4.1-apache, para consultar as imagens disponíveis no 
+#Docker Compose posso acessar o site: hub.docker.com
+#Para informar qual é a pasta do meu projeto será compartilhada com a pasta do
+#serviço do Docker eu utilizo a tag "volumes". Neste exemplo o projeto "simple-php-website" 
+# está sendo compartilhado para a pasta "/var/www/html do apache.
+#Para dizer qual porta da minha máquina será mapeada na máquina virtual do composer
+#devo usar a tag 'ports' e dizer a porta da minha máquina (neste caso 80) será mapeada
+#para a máquina virtual do composer (que também é 80).
+#Para baixar a imagem abaixo basta digitar o comando: "docker-compose up" através
+#do terminal na pasta do projeto e em seguida ele vai startar o projeto. Se a imagem
+#já tiver sido baixada, ele vai apenas startar o serviço.
+#Alguns comandos no terminal do Docker:
+#"docker ps" ->  exibe todas as máquinas docker que estão sendo executadas atualmente.
+#ATENCAO, como precisei instalar extensões para rodar o php para trabalhar
+#com o mysql, vou comentar a tag 'image' abaixo do php-server para não executar mais a imagem
+#pura do php tal e qual baixamos, agora vamos rodar a imagem que vamos customizar através do 
+#arquivo 'docker/Dockerfile' (ver os comentários da parte do mysql abaixo e também 
+#dentro do arquivo /docker/Dockerfile antes de prosseguir). Para isso, 
+#eu preciso agora incluir duas novas tags.
+#'build' que é para informar que imagem queremos construir e 'context' para informar onde
+#o script está. E 'dockerfile' para dizer qual é o nome do script que desejo executar. 
+#a tag 'image' agora é usada para o novo nome que eu quero dar a essa imagem customizada.
+#'links' para fazer a linkagem da imagem do php para o banco de dados, que neste caso
+#eu nomeei de 'db'. Observacao: No arquivo que eu faco a conexao com o banco de dados
+#o 'servername' nao deve ser chamado mais 'localhost' e sim 'db', pois foi o nome que dei
+#para a imagem do banco.
+#Com tudo configurado agora eu preciso subir o container com a nova configuração, para isso
+#eu devo executar o comando: 'docker-compose up --build --force-recreate' para buildar
+#a nossa imagem customizada e pra forçar o docker a recriá-la caso ele tenha feito
+#cache. Observação: o comando: 'docker-compose up --build --force-recreate' só precisa
+#executar uma vez, quando vc customiza a imagem e quando ela sofre alguma alteração.
+#As demais vezes pode ser apenas o 'docker-compose up'.
+#Alguns comandos no terminal do docker:
+# 'docker-compose up -d' -> '-d' significa detached para rodar o serviço em background.
+# 'docker ps' -> para ver os processos do docker startados e com isso eu consigo ver o id docontainer da maquina
+# 'docker-compose down' -> para derrubar os servicos do docker.
+# 'docker exec 'o id do container da maquina que pode ser visto com o docker ps' 'e o comando linux desejado''
+#exemplo: 'docker exec ee804ae68411 ls /' -> para ver todos os diretorios da máquina selecionada a partir do '/'.
+# 'docker exec -it 'id do container da maquina' /bin/bash' -> para acessar o terminal da maquina e executar
+#os comandos desejado na própria máquina.
+# 'docker stop 'id do container da maquina'' -> para parar uma máquina específica. Observacao: Não
+#preciso digitar todo o id do container, apenas os 3 primeiros dígitos dele.
+###### PUBLICANDO UMA IMAGEM NO DOCKER HUB##################
+#Só preciso executar os passos abaixo se eu quiser publicar uma imagem criada no docker hub.
+# ir no terminal e digitar os seguintes comandos: 'docker build -t php-com-mysql ./docker'
+#O 'docker build' é para buildar a imagem, o  '-t' é para dar um nome que no nosso caso
+#é 'php-com-mysql' e, em seguida, onde está o arquivo Dockerfile que no nosso caso está em './docker'
+#Após construir a imagem eu posso ver a imagem criada através do comando: 'docker images |grep php-com-mysql'
+#o comando 'docker images' lista todas as imagens criada na máquina. O '|grep' filtra pela imagem que 
+#desejo ver. 
+#Agora preciso me conectar no docker hub para enviar a imagem, para isso eu preciso fazer login
+#Então eu devo executar o comando: 'docker login' e fornecer os meus dados para efetuar o login.
+#Agora devo criar uma tag para identificar a minha imagem lá no docker hub, para isso, devo executar o
+#comando: 'docker tag php-com-mysql oaajunior/php-com-mysql:1.0.0' -> o comando 'docker-tag' cria a tag
+#em seguida vem o nome da imagem 'php-com-mysql' no nosso caso e depois vem o nome do repositório
+#lá no docker que geralmente é o usuário, o meu é 'oaajunior', e depois o nome da tag desejada e sua versao, 
+#no nosso caso é 'php-com-mysql:1.0.0'
+#Agora devo executar o push para o docker hub através do comando: 'docker push oaajunior/php-com-mysql:1.0.0'
+#O 'docker push' envia a imagem desejada, e a nossa imagem desejada é 'oaajunior/php-com-mysql:1.0.0'
+#Então, agora uma coisa massa. Depois de fazer o push da imagem para o docker hub, agora eu posso utilizar
+#essa imagem onde eu quiser, para isso, basta em image eu apontar para ela.
+#Então ficaria assim: 'image:oaajunior/php-com-mysql:1.0.0' no arquivo docker-compose.yaml. Muito massa.
+#Eu posso automatizar todo esse processo de publicação da imagem no docker hub, para isso, eu posso
+#criar um script de execução através do Makefile. Ver os comentários deste arquivo.
+version: '3'
+services:
+  php-server:
+    #image: php:7.4.1-apache
+    build:
+      context: ./docker
+      dockerfile: Dockerfile
+    image: php-custom-server
+    links:
+      - db
+    volumes:
+      - ./:/var/www/html/
+    ports:
+      - "80:80"
+
+  #Agora vou criar um banco de dados Mysql. Como ele é um serviço, o seu nome deve estar
+  #identado dentro de services. Depois de definir o nome que eu quero, que neste caso é "db"
+  #eu defini a imagem do mysql que eu quero trabalhar, escolhi o mysql:5.6 (dúvidas olhar
+  #o hub.docker.com). O mysql geralmente trabalha na porta 3306, por isso foi mapeada as
+  #ports abaixo. No volume, estou definindo qual o diretório onde localmente eu quero criar
+  #o banco de dados e também qual é o respectivo diretório do servidor.
+  #Na configuração do serviço, eu consigo setar algumas variáveis de ambiente
+  #para configurar o serviço. Então, abaixo, na tag environment estou realizando algumas configuraçoes
+  #no MYSQL_ROOT_HOST estou passando o valor '%' porque estou definindo o próprio localhost
+  #no MYSQL_DATABASE estou passando o nome do meu banco de dados (o nome que eu desejo criar)
+  #no MYSQL_USER estou passando o usuário administrador do banco que neste caso é o root
+  #e em MYSQL_ALLOW_EMPTY_PASSWORD eu estou permitindo que o root não tenha senha.
+  #pronto, agora é so executar o comando 'docker-compose up' para o serviço mysql ser baixado e
+  #startado.
+  db:
+    image: mysql:5.6
+    ports: 
+      - "3306:3306"
+    volumes:
+      - ./docker/bd:/var/lib/mysql
+    environment:
+      - MYSQL_ROOT_HOST=%
+      - MYSQL_DATABASE=banco-mysql
+      - MYSQL_USER=root
+      - MYSQL_ALLOW_EMPTY_PASSWORD=yes
+  
+  #Abaixo estou instalando o serviço do phpmyadmin. Peguei o exemplo tal e qual do 'hub.docker.com'
+  #o nome do serviço é phpmyadmin, a imagem tem o mesmo nome. Nao sei o que significa a tag restart
+  #O environment eu estou setando que posso acessar qualquer banco de dados mysql.
+  #Para acessar o phpmyadmin eu devo fazer 'localhost:/8080' e informar os seguintes dados
+  #servidor db, usuário root e senha em branco (como defini anteriormente nas configuraçoes do 
+  #mysql).
+  phpmyadmin:
+    image: phpmyadmin
+    restart: always
+    ports:
+      - 8080:80
+    environment:
+      - PMA_ARBITRARY=1
+
+
