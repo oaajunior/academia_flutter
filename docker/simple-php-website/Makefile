@@ -31,6 +31,6 @@ build:
 login:
 	docker login
 tag: login
-	docker tag php-com-mysql rodrigorahman/php-com-mysql:$(TAG)
+	docker tag php-com-mysql oaajunior/php-com-mysql:$(TAG)
 push: tag
-	docker push rodrigorahman/php-com-mysql:$(TAG)
+	docker push oaajunior/php-com-mysql:$(TAG)
