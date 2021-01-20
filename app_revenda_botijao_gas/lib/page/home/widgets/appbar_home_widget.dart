@@ -6,6 +6,7 @@ class AppBarHomeWidget extends StatelessWidget implements PreferredSizeWidget {
   final appBar = AppBar(
     title: Text('Escolha uma Revenda').customText(
       fontSize: 56,
+      fontWeight: FontWeight.bold,
     ),
     actions: [
       PopupMenuButton<String>(
@@ -73,7 +74,10 @@ Widget _popupMenuItem({String option, String description, bool hasCheckbox}) {
     child: Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        Text(description).customText(fontSize: 48),
+        Text(description).customText(
+          fontSize: 48,
+          color: Colors.blue,
+        ),
         hasCheckbox
             ? Checkbox(
                 onChanged: (value) => _filtro['optionMelhorAvaliacao'],
