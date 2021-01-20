@@ -27,13 +27,13 @@ class _ProductItemShopWidgetState extends State<ProductItemShopWidget> {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        _buildDescription(),
+        _buildTotalPrice(),
         _buildItemQuantity(),
       ],
     );
   }
 
-  Widget _buildDescription() {
+  Widget _buildTotalPrice() {
     return Container(
       margin: const EdgeInsets.only(top: 4.0),
       color: Colors.white,
@@ -51,7 +51,7 @@ class _ProductItemShopWidgetState extends State<ProductItemShopWidget> {
                 ),
                 child: Container(
                   alignment: Alignment.center,
-                  child: Text('1').customText(
+                  child: Text('$cylinderQuantity').customText(
                     color: Colors.white,
                     align: TextAlign.center,
                     fontSize: 42,
@@ -60,7 +60,9 @@ class _ProductItemShopWidgetState extends State<ProductItemShopWidget> {
                   height: (0.08).sizeHeightScreen(),
                   decoration: BoxDecoration(
                     shape: BoxShape.circle,
-                    color: Colors.black,
+                    color: Color(
+                      int.parse('0xFF${fornecedor?.cor ?? 'FFFFFF'}'),
+                    ),
                   ),
                 ),
               ),
