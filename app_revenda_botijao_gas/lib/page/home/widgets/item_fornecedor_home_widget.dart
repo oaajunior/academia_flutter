@@ -10,7 +10,7 @@ class ItemFornecedorHomeWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: (0.2).sizeHeightScreen(),
+      height: (0.18).sizeHeightScreen(),
       margin: const EdgeInsets.symmetric(
         vertical: 8,
         horizontal: 16,
@@ -110,19 +110,25 @@ class ItemFornecedorHomeWidget extends StatelessWidget {
                         right: 16.0,
                       ),
                       child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Text('Nota').customText(
-                            fontSize: 36,
-                            color: Colors.grey,
+                          Padding(
+                            padding: const EdgeInsets.only(left: 16.0),
+                            child: Text('Nota').customText(
+                              fontSize: 36,
+                              color: Colors.grey,
+                            ),
                           ),
                           Text('Tempo Médio').customText(
                             fontSize: 36,
                             color: Colors.grey,
                           ),
-                          Text('Preço').customText(
-                            fontSize: 36,
-                            color: Colors.grey,
+                          Padding(
+                            padding: const EdgeInsets.only(right: 36.0),
+                            child: Text('Preço').customText(
+                              fontSize: 36,
+                              color: Colors.grey,
+                            ),
                           ),
                         ],
                       ),
