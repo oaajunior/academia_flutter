@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 
 import '../home/home_page.dart';
-import '../../page/shop/widgets/product_quantity_shop_widget.dart';
+import 'widgets/product_item_shop_widget.dart';
 import '../../page/shop/widgets/stepper_shop_widget.dart';
 import '../../page/shop/widgets/appbar_shop_widget.dart';
-import './widgets/product_description_shop_widget.dart';
+
 import '../../page/shop/widgets/payment_button_shop_widget.dart';
 
 class ShopPage extends StatelessWidget {
@@ -22,8 +22,7 @@ class ShopPage extends StatelessWidget {
           child: Column(
             children: [
               StepperShopWidget(),
-              ProductDescriptionShopWidget(fornecedor),
-              ProductQuantityShopWidget(fornecedor),
+              ProductItemShopWidget(fornecedor),
               PaymentButtonShopWidget(),
             ],
           ),

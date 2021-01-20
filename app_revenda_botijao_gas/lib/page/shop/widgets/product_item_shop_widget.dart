@@ -3,19 +3,104 @@ import 'package:flutter/material.dart';
 
 import '../../home/home_page.dart';
 
-class ProductQuantityShopWidget extends StatefulWidget {
+class ProductItemShopWidget extends StatefulWidget {
   final Fornecedor fornecedor;
-  ProductQuantityShopWidget(this.fornecedor);
+  ProductItemShopWidget(this.fornecedor);
 
   @override
-  _ProductQuantityShopWidgetState createState() =>
-      _ProductQuantityShopWidgetState();
+  _ProductItemShopWidgetState createState() => _ProductItemShopWidgetState();
 }
 
-class _ProductQuantityShopWidgetState extends State<ProductQuantityShopWidget> {
-  var cylinderQuantity = 0;
+class _ProductItemShopWidgetState extends State<ProductItemShopWidget> {
+  int cylinderQuantity;
+  double totalPrice;
+  Fornecedor fornecedor;
+  @override
+  void initState() {
+    cylinderQuantity = 1;
+    totalPrice = widget.fornecedor.preco;
+    fornecedor = widget.fornecedor;
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
+    return Column(
+      children: [
+        _buildDescription(),
+        _buildItemQuantity(),
+      ],
+    );
+  }
+
+  Widget _buildDescription() {
+    return Container(
+      margin: const EdgeInsets.only(top: 4.0),
+      color: Colors.white,
+      width: (1.0).sizeWidthScreen(),
+      height: (0.1).sizeHeightScreen(),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Row(
+            children: [
+              Padding(
+                padding: const EdgeInsets.symmetric(
+                  vertical: 8.0,
+                  horizontal: 8.0,
+                ),
+                child: Container(
+                  alignment: Alignment.center,
+                  child: Text('1').customText(
+                    color: Colors.white,
+                    align: TextAlign.center,
+                    fontSize: 42,
+                  ),
+                  width: (0.08).sizeWidthScreen(),
+                  height: (0.08).sizeHeightScreen(),
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    color: Colors.black,
+                  ),
+                ),
+              ),
+              Container(
+                width: (0.5).sizeWidthScreen(),
+                child: Text('${fornecedor.nome} - Botijão de 13kg').customText(
+                  fontSize: 40,
+                ),
+              )
+            ],
+          ),
+          Row(
+            textBaseline: TextBaseline.alphabetic,
+            crossAxisAlignment: CrossAxisAlignment.baseline,
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              Text('R\$').customText(
+                fontSize: 36,
+                align: TextAlign.end,
+              ),
+              Padding(
+                padding: const EdgeInsets.only(
+                  left: 4.0,
+                  right: 8.0,
+                ),
+                child: Text(
+                        '${totalPrice.toStringAsFixed(2)?.replaceFirst('.', ',') ?? 0.0}')
+                    .customText(
+                  fontSize: 62,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildItemQuantity() {
     return Column(
       mainAxisAlignment: MainAxisAlignment.start,
       children: [
@@ -56,7 +141,7 @@ class _ProductQuantityShopWidgetState extends State<ProductQuantityShopWidget> {
                       top: 16.0,
                       left: 32.0,
                     ),
-                    child: Text(widget.fornecedor.nome).customText(
+                    child: Text(fornecedor.nome).customText(
                       fontSize: 42,
                     ),
                   ),
@@ -72,7 +157,7 @@ class _ProductQuantityShopWidgetState extends State<ProductQuantityShopWidget> {
                         Row(
                           mainAxisAlignment: MainAxisAlignment.start,
                           children: [
-                            Text('${widget.fornecedor.nota}').customText(
+                            Text('${fornecedor.nota}').customText(
                               fontSize: 42,
                             ),
                             Icon(
@@ -85,7 +170,7 @@ class _ProductQuantityShopWidgetState extends State<ProductQuantityShopWidget> {
                         Row(
                           mainAxisAlignment: MainAxisAlignment.start,
                           children: [
-                            Text('${widget.fornecedor.tempoMedio}').customText(
+                            Text('${fornecedor.tempoMedio}').customText(
                               fontSize: 42,
                             ),
                             Text('min').customText(
@@ -108,10 +193,10 @@ class _ProductQuantityShopWidgetState extends State<ProductQuantityShopWidget> {
                         right: 8.0,
                       ),
                       color: Color(
-                        int.parse('0xFF${widget.fornecedor?.cor ?? 'FFFFFF'}'),
+                        int.parse('0xFF${fornecedor?.cor ?? 'FFFFFF'}'),
                       ),
                       padding: const EdgeInsets.all(8.0),
-                      child: Text('${widget.fornecedor.tipo}').customText(
+                      child: Text('${fornecedor.tipo}').customText(
                         fontSize: 42,
                         color: Colors.white,
                       ),
@@ -161,7 +246,7 @@ class _ProductQuantityShopWidgetState extends State<ProductQuantityShopWidget> {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Text(widget.fornecedor.nome).customText(
+                          Text(fornecedor.nome).customText(
                             fontSize: 42,
                           ),
                         ],
@@ -181,7 +266,7 @@ class _ProductQuantityShopWidgetState extends State<ProductQuantityShopWidget> {
                               right: 16.0,
                             ),
                             child: Text(
-                                    '${widget.fornecedor?.preco?.toStringAsFixed(2)?.replaceFirst('.', ',') ?? 0.0}')
+                                    '${fornecedor?.preco?.toStringAsFixed(2)?.replaceFirst('.', ',') ?? 0.0}')
                                 .customText(
                               fontSize: 62,
                               fontWeight: FontWeight.bold,
@@ -206,6 +291,8 @@ class _ProductQuantityShopWidgetState extends State<ProductQuantityShopWidget> {
                             if (cylinderQuantity > 0) {
                               setState(() {
                                 cylinderQuantity--;
+                                totalPrice =
+                                    cylinderQuantity * fornecedor.preco;
                               });
                             }
                           },
@@ -251,6 +338,7 @@ class _ProductQuantityShopWidgetState extends State<ProductQuantityShopWidget> {
                           onTap: () {
                             setState(() {
                               cylinderQuantity++;
+                              totalPrice = cylinderQuantity * fornecedor.preco;
                             });
                           },
                           child: Container(
