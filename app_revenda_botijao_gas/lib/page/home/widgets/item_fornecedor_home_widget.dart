@@ -10,7 +10,7 @@ class ItemFornecedorHomeWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: (0.18).sizeHeightScreen(),
+      height: (0.2).sizeHeightScreen(),
       margin: const EdgeInsets.symmetric(
         vertical: 8,
         horizontal: 16,

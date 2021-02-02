@@ -1,4 +1,5 @@
 import 'package:app_revenda_botijao_gas/model/fornecedor_model.dart';
+import 'package:app_revenda_botijao_gas/page/shop/widgets/value_animation_shop_widget.dart';
 import 'package:flutter/material.dart';
 
 import '../../home/home_page.dart';
@@ -88,11 +89,8 @@ class _ProductItemShopWidgetState extends State<ProductItemShopWidget> {
                   left: 4.0,
                   right: 8.0,
                 ),
-                child: Text(
-                        '${totalPrice.toStringAsFixed(2)?.replaceFirst('.', ',') ?? 0.0}')
-                    .customText(
-                  fontSize: 62,
-                  fontWeight: FontWeight.bold,
+                child: ValueAnimationShopWidget(
+                  value: totalPrice,
                 ),
               ),
             ],
@@ -329,9 +327,11 @@ class _ProductItemShopWidgetState extends State<ProductItemShopWidget> {
                                 borderRadius: BorderRadius.circular(10.0),
                                 color: Colors.orangeAccent,
                               ),
-                              child: Text('$cylinderQuantity').customText(
-                                fontSize: 46,
-                                align: TextAlign.center,
+                              child: Center(
+                                child: Text('$cylinderQuantity').customText(
+                                  fontSize: 46,
+                                  align: TextAlign.center,
+                                ),
                               ),
                             )
                           ],

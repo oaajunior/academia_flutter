@@ -13,6 +13,7 @@ class PaymentButtonShopWidget extends StatelessWidget {
         child: Container(
           alignment: Alignment.bottomCenter,
           child: Container(
+            margin: const EdgeInsets.only(bottom: 8.0),
             height: (0.1).sizeHeightScreen(),
             width: (0.55).sizeWidthScreen(),
             child: Center(
