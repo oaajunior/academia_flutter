@@ -16,6 +16,8 @@ class Connection {
 
   factory Connection() {
     //O factory, pelo que entendi do Prof. Rahman, permite customizar o construtor.
+    //E também o construtor é marcado de certa forma a não criar sempre uma nova
+    //instancia da classe.
     //Exemplo de criação de um singleton
     if (_instance == null) {
       _instance = Connection._();
@@ -60,7 +62,7 @@ class Connection {
 
   FutureOr<void> _onConfigure(Database db) async {
     await db.execute('PRAGMA foreing_keys = ON'); //Essa configuração faz com
-    //que as foreing key sejam deletadas se seus relacionamentos
+    //que as foreing key tenham que ser deletadas se seus relacionamentos
     //não mais existirem.
   }
 

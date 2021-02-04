@@ -41,7 +41,7 @@ class HomeController extends ChangeNotifier {
 
         if (day != null) {
           daySelected = day;
-          filterBySelectedDay();
+          this.filterBySelectedDay();
         }
 
         break;
@@ -117,7 +117,7 @@ class HomeController extends ChangeNotifier {
       });
       loading = false;
       deleted = true;
-      update();
+      this.update();
     } catch (e) {
       print(e);
       error = 'Erro ao deletar a task';

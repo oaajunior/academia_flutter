@@ -37,8 +37,8 @@ class _HomePageState extends State<HomePage> {
 
   @override
   void dispose() {
-    Provider.of<HomeController>(context, listen: false).addListener(() {});
     super.dispose();
+    Provider.of<HomeController>(context, listen: false).addListener(() {});
   }
 
   @override
@@ -149,7 +149,7 @@ class _HomePageState extends State<HomePage> {
                         return buildListTile(
                             context, todo, controller, itemKey);
                       },
-                    )
+                    ),
                   ],
                 );
               },
@@ -197,10 +197,12 @@ class _HomePageState extends State<HomePage> {
                     color: Colors.grey,
                   ),
                   FlatButton(
-                    child: Text('Sim',
-                        style: TextStyle(
-                          color: Colors.white,
-                        )),
+                    child: Text(
+                      'Sim',
+                      style: TextStyle(
+                        color: Colors.white,
+                      ),
+                    ),
                     onPressed: () => Navigator.of(ctx).pop(true),
                     color: Theme.of(context).primaryColor,
                   ),
@@ -228,9 +230,10 @@ class _HomePageState extends State<HomePage> {
         trailing: Text(
           '${todo.dataHora.hour.toString().padLeft(2, '0')}:${todo.dataHora.minute.toString().padLeft(2, '0')}',
           style: TextStyle(
-              fontWeight: FontWeight.bold,
-              fontSize: 20,
-              decoration: todo.finalizado ? TextDecoration.lineThrough : null),
+            fontWeight: FontWeight.bold,
+            fontSize: 20,
+            decoration: todo.finalizado ? TextDecoration.lineThrough : null,
+          ),
         ),
       ),
     );

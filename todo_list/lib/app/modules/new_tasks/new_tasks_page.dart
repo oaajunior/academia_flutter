@@ -90,7 +90,7 @@ class _NewTasksPageState extends State<NewTasksPage> {
                       height: 10,
                     ),
                     TextFormField(
-                      controller: controller.nomeTaskController,
+                      controller: controller.nameTaskController,
                       decoration: InputDecoration(border: OutlineInputBorder()),
                       validator: (value) {
                         if (value.isEmpty) {

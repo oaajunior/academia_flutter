@@ -23,16 +23,19 @@ class _TimeComponentState extends State<TimeComponent> {
   final List<String> _sec = List.generate(60, (index) => index++)
       .map((h) => '${h.toString().padLeft(2, '0')}')
       .toList();
-  String _hourSelected;
-  String _minSelected;
-  String _secSelected;
+  ValueNotifier<String> _hourSelected;
+  ValueNotifier<String> _minSelected;
+  ValueNotifier<String> _secSelected;
   var currentDateTime = DateTime.now();
 
   @override
   void initState() {
-    _hourSelected = currentDateTime.hour.toString().padLeft(2, '0');
-    _minSelected = currentDateTime.minute.toString().padLeft(2, '0');
-    _secSelected = currentDateTime.second.toString().padLeft(2, '0');
+    _hourSelected =
+        ValueNotifier(currentDateTime.hour.toString().padLeft(2, '0'));
+    _minSelected =
+        ValueNotifier(currentDateTime.minute.toString().padLeft(2, '0'));
+    _secSelected =
+        ValueNotifier(currentDateTime.second.toString().padLeft(2, '0'));
     invokeCallback();
     super.initState();
   }
@@ -42,9 +45,9 @@ class _TimeComponentState extends State<TimeComponent> {
       widget.date.year,
       widget.date.month,
       widget.date.day,
-      int.parse(_hourSelected),
-      int.parse(_minSelected),
-      int.parse(_secSelected),
+      int.parse(_hourSelected.value),
+      int.parse(_minSelected.value),
+      int.parse(_secSelected.value),
     );
     widget.onSelectedTime(newDate);
   }
@@ -54,30 +57,14 @@ class _TimeComponentState extends State<TimeComponent> {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceAround,
       children: [
-        _buildBox(_hours, currentDateTime.hour, (String value) {
-          setState(() {
-            _hourSelected = value;
-            invokeCallback();
-          });
-        }),
-        _buildBox(_min, currentDateTime.minute, (String value) {
-          setState(() {
-            _minSelected = value;
-            invokeCallback();
-          });
-        }),
-        _buildBox(_sec, currentDateTime.second, (String value) {
-          setState(() {
-            _secSelected = value;
-            invokeCallback();
-          });
-        }),
+        _buildBox(_hours, _hourSelected),
+        _buildBox(_min, _minSelected),
+        _buildBox(_sec, _secSelected),
       ],
     );
   }
 
-  Widget _buildBox(
-      List<String> options, int currentTime, ValueChanged<String> onChanged) {
+  Widget _buildBox(List<String> option, ValueNotifier<String> timeComponent) {
     return Container(
       width: 100,
       height: 120,
@@ -93,28 +80,35 @@ class _TimeComponentState extends State<TimeComponent> {
           )
         ],
       ),
-      child: ListWheelScrollView(
-        overAndUnderCenterOpacity: 0.5,
-        onSelectedItemChanged: (value) =>
-            onChanged(value.toString().padLeft(2, '0')),
-        itemExtent: 60,
-        perspective: 0.007,
-        physics: FixedExtentScrollPhysics(),
-        controller: FixedExtentScrollController(
-          initialItem: currentTime,
-        ),
-        children: options
-            .map<Text>(
-              (elem) => Text(
-                elem,
-                style: TextStyle(
-                  fontSize: 40,
-                  color: Colors.white,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            )
-            .toList(),
+      child: ValueListenableBuilder(
+        valueListenable: timeComponent,
+        builder: (context, value, child) {
+          return ListWheelScrollView(
+            overAndUnderCenterOpacity: 0.5,
+            onSelectedItemChanged: (value) => {
+              timeComponent.value = value.toString().padLeft(2, '0'),
+              invokeCallback(),
+            },
+            itemExtent: 60,
+            perspective: 0.007,
+            physics: FixedExtentScrollPhysics(),
+            controller: FixedExtentScrollController(
+              initialItem: int.parse(value),
+            ),
+            children: option
+                .map<Text>(
+                  (elem) => Text(
+                    elem,
+                    style: TextStyle(
+                      fontSize: 40,
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                )
+                .toList(),
+          );
+        },
       ),
     );
   }

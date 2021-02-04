@@ -7,7 +7,7 @@ class NewTasksController extends ChangeNotifier {
   final TodosRepository repository;
   final _dateFormat = DateFormat('dd/MM/yyyy');
   GlobalKey<FormState> formKey = GlobalKey();
-  TextEditingController nomeTaskController = TextEditingController();
+  TextEditingController nameTaskController = TextEditingController();
   DateTime daySelected;
   bool saved = false;
   bool loading = false;
@@ -24,7 +24,7 @@ class NewTasksController extends ChangeNotifier {
       if (formKey.currentState.validate()) {
         loading = true;
         saved = false;
-        await repository.saveTodo(daySelected, nomeTaskController.text);
+        await repository.saveTodo(daySelected, nameTaskController.text);
         loading = false;
         saved = true;
       }

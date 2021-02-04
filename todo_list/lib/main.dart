@@ -52,10 +52,11 @@ class _AppState extends State<App> {
         title: 'Todo List',
         debugShowCheckedModeBanner: false,
         theme: ThemeData(
-            primaryColor: Color(0xFFFF9129),
-            buttonColor: Color(0xFFFF9129),
-            textTheme: GoogleFonts.robotoTextTheme(),
-            visualDensity: VisualDensity.adaptivePlatformDensity),
+          primaryColor: Color(0xFFFF9129),
+          buttonColor: Color(0xFFFF9129),
+          textTheme: GoogleFonts.robotoTextTheme(),
+          visualDensity: VisualDensity.adaptivePlatformDensity,
+        ),
         routes: {
           NewTasksPage.routerName: (_) => ChangeNotifierProvider(
                 create: (context) {
