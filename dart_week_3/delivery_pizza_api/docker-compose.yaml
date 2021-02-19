@@ -1,0 +1,20 @@
+#Dúvidas da configuração realizada no arquivo docker-compose.yaml verificar projeto
+#example_docker_mysql
+
+version: "3.1"
+volumes: 
+    mysql_data:
+      driver: local
+services:
+  db:
+    image: mysql:8
+    command: --default-authentication-plugin=mysql_native_password
+    ports:
+      - 3306:3306
+    environment: 
+      MYSQL_ROOT_PASSWORD: pizza_delivery
+      MYSQL_DATABASE: pizza_delivery
+    volumes: 
+      - ./mysql_data:/var/lib/mysql
+
+
